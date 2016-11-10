@@ -1,5 +1,8 @@
 var request = require('superagent')
 var showPost = require('../views/showPost.js')
+var cors = require('cors');
+app.use(cors()) // CORS!!!!!!
+
 
 var main = document.querySelector('main')
 
@@ -10,6 +13,7 @@ request
       console.log(error)
     }
     else {
+      console.log("Resolved")
       post = showPost(response.name, response.message)
       main.appendChild(post)
     }

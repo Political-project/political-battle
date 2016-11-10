@@ -1,0 +1,15 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.main-area {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+}
+
+.box {
+  flex: 1;
+  text-align: center;
+}

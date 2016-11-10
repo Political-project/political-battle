@@ -6,7 +6,7 @@ var database = require('../db/db')
 router.get('/clinton', function(req, res, next) {
   database.getAllComments('hillary')
   .then(function(clintonTable){
-    res.json({clintonTable: clintonTable})
+    res.json({posts: clintonTable})
   })
   .catch(function(error){
     res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})

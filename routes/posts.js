@@ -18,8 +18,8 @@ router.get('/clinton/:id', function(req, res, next) {
   res.json({message: "Hillary does not float my boat"});
 });
 
-/* POST to the clinton table */
-router.post('/clinton', function(req, res, next){
+/* POST to the a table */
+router.post('/:candidate', function(req, res, next){
 })
 
 

@@ -33,3 +33,8 @@ function postComment(table, name, message, sentiment) {
       return knex(table).insert({nickname: name, message: message, negative: 1})
     }
 }
+
+// getAllComments('clinton')
+//   .then(function(clintontable){
+//     console.log(clintontable)
+//   })

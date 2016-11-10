@@ -4,17 +4,13 @@ var database = require('../db/db')
 
 /* GET all the posts from the Clinton Posts table. */
 router.get('/clinton', function(req, res, next) {
-  database.getAllComments()
+  database.getAllComments('hillary')
   .then(function(clintonTable){
-    console.log(clintonTable)
+    res.json({clintonTable: clintonTable})
   })
   .catch(function(error){
     res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
   })
-  // res.json({posts: [
-  //   {message: 'I like Hillary', id:2, name: "Lord Master Michele"},
-  //   {message: 'Hillary does not float my boat', id: 2, name:"james_cool_guy", sentiment:"negative"}
-  // ]});
 });
 
 /* GET a specific post from the Clinton Posts DB */
@@ -27,13 +23,24 @@ router.post('/clinton', function(req, res, next){
 })
 
 /* GET most popular posts from hillary table */
-router.post('/trump/popular', function(req, res, next){
+router.post('/clinton/popular', function(req, res, next){
   res.json({posts: [
     {message: 'I like Trump', id:2, name: "Lord Master Michele"},
     {message: 'Trump is too orange', id: 2, name:"james_cool_guy", sentiment:"negative"}
   ]});
 })
 
+
+/* GET all the posts from the Clinton Posts table. */
+router.get('/trump', function(req, res, next) {
+  database.getAllComments('trump')
+  .then(function(clintonTable){
+    res.json({clintonTable: clintonTable})
+  })
+  .catch(function(error){
+    res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
+  })
+});
 
 /* POST to the trump table */
 router.post('/trump', function(req, res, next){
@@ -56,13 +63,3 @@ router.get('/trump/:id'), function(req, res, next) {
 }
 
 module.exports = router;
-
-
-//   / --> html  (js, css)
-     // public/index.html
-     // public/bundle.js
-
-//   /api/v1/cats --> json
-
-
-//   res.render('home')  (sever side rendering)

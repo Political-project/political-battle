@@ -4,8 +4,10 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTableIfNotExists('neutral', function(table){
     table.increments('id')
     table.string('nickname')
+    table.text('message')
     table.integer('votecount')
-    table.string('sentiment')
+    table.integer('positive').defaultTo(0)
+    table.integer('negative').defaultTo(0)
   })
   console.log('Table has been created')
 }

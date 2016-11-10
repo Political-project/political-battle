@@ -18,8 +18,8 @@ router.get('/clinton/:id', function(req, res, next) {
 router.post('/clinton', function(req, res, next){
 })
 
-/* GET most popular posts from hillary table */
-router.post('/trump/popular', function(req, res, next){
+/* GET posts from Trump table */
+router.get('/trump', function(req, res, next){
   res.json({posts: [
     {message: 'I like Trump', id:2, name: "Lord Master Michele"},
     {message: 'Trump is too orange', id: 2, name:"james_cool_guy", sentiment:"negative"}
@@ -32,7 +32,7 @@ router.post('/trump', function(req, res, next){
 })
 
 /* GET most popular posts from Trump table */
-router.post('/trump/popular', function(req, res, next){
+router.get('/trump/popular', function(req, res, next){
   res.json({posts: [
     {message: 'I like Trump', id:2, name: "Lord Master Michele"},
     {message: 'Trump is too orange', id: 2, name:"james_cool_guy", sentiment:"negative"}
@@ -42,9 +42,9 @@ router.post('/trump/popular', function(req, res, next){
 /* GET a specific post from the Trump Posts table. */
 router.get('/trump/:id'), function(req, res, next) {
   res.json({posts: [
-    {message: 'I like Trump', id:2, name: "Lord Master Michele"},
-    {message: 'Trump is too orange', id: 2, name:"james_cool_guy", sentiment:"negative"}
-  ]});
+    {message: 'I like Trump', id:2, name: "Lord Master Michele"}
+  ]
+  });
 }
 
 module.exports = router;

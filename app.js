@@ -12,6 +12,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser())
 app.use(express.static('public'))  /// mix added this
 
-app.use('/api/v1/users', users);
+app.use('/api/v1/posts', posts);
 
 module.exports = app;

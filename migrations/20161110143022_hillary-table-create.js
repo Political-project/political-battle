@@ -1,7 +1,7 @@
 
 exports.up = function(knex, Promise) {
-  console.log('Creating Hillary table')
-  return knex.schema.createTableIfNotExists('hillary', function(table){
+  console.log('Creating Clinton table')
+  return knex.schema.createTableIfNotExists('clinton', function(table){
     table.increments('id')
     table.string('nickname')
     table.text('message')
@@ -13,7 +13,7 @@ exports.up = function(knex, Promise) {
 }
 
 exports.down = function(knex, Promise) {
-  return knex.schema.dropTableIfExists('hillary').then(function() {
-    console.log("Hillary table removed");
+  return knex.schema.dropTableIfExists('clinton').then(function() {
+    console.log("Clinton table removed");
   })
 }

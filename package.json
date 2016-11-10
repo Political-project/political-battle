@@ -13,7 +13,8 @@
     "knex": "^0.12.6",
     "nodemon": "^1.11.0",
     "pg": "^6.1.0",
-    "superagent": "^2.3.0"
+    "superagent": "^2.3.0",
+    "watchify": "^3.7.0"
   },
   "devDependencies": {
     "sqlite3": "^3.1.8"

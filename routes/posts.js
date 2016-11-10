@@ -1,13 +1,20 @@
 var express = require('express');
 var router = express.Router();
-var data = require('./db/db')
+var database = require('../db/db')
 
-/* GET all the posts from the Clint Posts table. */
+/* GET all the posts from the Clinton Posts table. */
 router.get('/clinton', function(req, res, next) {
-  res.json({posts: [
-    {message: 'I like Hillary', id:2, name: "Lord Master Michele"},
-    {message: 'Hillary does not float my boat', id: 2, name:"james_cool_guy", sentiment:"negative"}
-  ]});
+  database.getAllComments()
+  .then(function(clintonTable){
+    console.log(clintonTable)
+  })
+  .catch(function(error){
+    res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
+  })
+  // res.json({posts: [
+  //   {message: 'I like Hillary', id:2, name: "Lord Master Michele"},
+  //   {message: 'Hillary does not float my boat', id: 2, name:"james_cool_guy", sentiment:"negative"}
+  // ]});
 });
 
 /* GET a specific post from the Clinton Posts DB */

@@ -2,9 +2,9 @@ var express = require('express');
 var router = express.Router();
 var database = require('../db/db')
 
-/* GET all the posts from the Clinton Posts table. */
-router.get('/clinton', function(req, res, next) {
-  database.getAllComments('hillary')
+/* GET all the posts from the a table. */
+router.get('/:candidate', function(req, res, next) {
+  database.getAllComments(req.params.candidate)
   .then(function(clintonTable){
     res.json({posts: clintonTable})
   })

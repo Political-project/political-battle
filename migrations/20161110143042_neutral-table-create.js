@@ -6,7 +6,8 @@ exports.up = function(knex, Promise) {
     table.string('nickname')
     table.text('message')
     table.integer('votecount')
-    table.string('sentiment')
+    table.integer('positive')
+    table.integer('negative')
   })
   console.log('Table has been created')
 }

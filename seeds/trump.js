@@ -10,21 +10,21 @@ exports.seed = function(knex, Promise) {
           nickname: 'Gandalf',
           message: 'Trump is the new Sauron',
           votecount: 5,
-          sentiment: 'negative'
+          negative: '1'
         }),
         knex('neutral').insert({
           id: 2,
           nickname: 'michael',
           message: 'Make America great again, yeah!',
           votecount: 34,
-          sentiment: 'positive'
+          positive: '1'
         }),
         knex('neutral').insert({
           id: 3,
           nickname: 'james',
-          message: 'I\'m never visiting the US again'
+          message: 'I\'m never visiting the US again',
           votecount: 100,
-          sentiment: 'negative'
+          negative: '1'
         })
       ]);
     });

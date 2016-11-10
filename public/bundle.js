@@ -209,7 +209,7 @@ function isTruthy(value) {
     return !!value
 }
 
-},{"indexof":7}],4:[function(require,module,exports){
+},{"indexof":6}],4:[function(require,module,exports){
 
 /**
  * Expose `Emitter`.
@@ -375,251 +375,6 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 },{}],5:[function(require,module,exports){
-(function () {
-
-  'use strict';
-
-  var vary = require('vary');
-
-  var defaults = {
-      origin: '*',
-      methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-      preflightContinue: false,
-      optionsSuccessStatus: 204
-    };
-
-  function isString(s) {
-    return typeof s === 'string' || s instanceof String;
-  }
-
-  function isOriginAllowed(origin, allowedOrigin) {
-    if (Array.isArray(allowedOrigin)) {
-      for (var i = 0; i < allowedOrigin.length; ++i) {
-        if (isOriginAllowed(origin, allowedOrigin[i])) {
-          return true;
-        }
-      }
-      return false;
-    } else if (isString(allowedOrigin)) {
-      return origin === allowedOrigin;
-    } else if (allowedOrigin instanceof RegExp) {
-      return allowedOrigin.test(origin);
-    } else {
-      return !!allowedOrigin;
-    }
-  }
-
-  function configureOrigin(options, req) {
-    var requestOrigin = req.headers.origin,
-      headers = [],
-      isAllowed;
-
-    if (!options.origin || options.origin === '*') {
-      // allow any origin
-      headers.push([{
-        key: 'Access-Control-Allow-Origin',
-        value: '*'
-      }]);
-    } else if (isString(options.origin)) {
-      // fixed origin
-      headers.push([{
-        key: 'Access-Control-Allow-Origin',
-        value: options.origin
-      }]);
-      headers.push([{
-        key: 'Vary',
-        value: 'Origin'
-      }]);
-    } else {
-      isAllowed = isOriginAllowed(requestOrigin, options.origin);
-      // reflect origin
-      headers.push([{
-        key: 'Access-Control-Allow-Origin',
-        value: isAllowed ? requestOrigin : false
-      }]);
-      if (isAllowed) {
-        headers.push([{
-          key: 'Vary',
-          value: 'Origin'
-        }]);
-      }
-    }
-
-    return headers;
-  }
-
-  function configureMethods(options) {
-    var methods = options.methods || defaults.methods;
-    if (methods.join) {
-      methods = options.methods.join(','); // .methods is an array, so turn it into a string
-    }
-    return {
-      key: 'Access-Control-Allow-Methods',
-      value: methods
-    };
-  }
-
-  function configureCredentials(options) {
-    if (options.credentials === true) {
-      return {
-        key: 'Access-Control-Allow-Credentials',
-        value: 'true'
-      };
-    }
-    return null;
-  }
-
-  function configureAllowedHeaders(options, req) {
-    var headers = options.allowedHeaders || options.headers;
-    if (!headers) {
-      headers = req.headers['access-control-request-headers']; // .headers wasn't specified, so reflect the request headers
-    } else if (headers.join) {
-      headers = headers.join(','); // .headers is an array, so turn it into a string
-    }
-    if (headers && headers.length) {
-      return {
-        key: 'Access-Control-Allow-Headers',
-        value: headers
-      };
-    }
-    return null;
-  }
-
-  function configureExposedHeaders(options) {
-    var headers = options.exposedHeaders;
-    if (!headers) {
-      return null;
-    } else if (headers.join) {
-      headers = headers.join(','); // .headers is an array, so turn it into a string
-    }
-    if (headers && headers.length) {
-      return {
-        key: 'Access-Control-Expose-Headers',
-        value: headers
-      };
-    }
-    return null;
-  }
-
-  function configureMaxAge(options) {
-    var maxAge = options.maxAge && options.maxAge.toString();
-    if (maxAge && maxAge.length) {
-      return {
-        key: 'Access-Control-Max-Age',
-        value: maxAge
-      };
-    }
-    return null;
-  }
-
-  function applyHeaders(headers, res) {
-    for (var i = 0, n = headers.length; i < n; i++) {
-      var header = headers[i];
-      if (header) {
-        if (Array.isArray(header)) {
-          applyHeaders(header, res);
-        } else if (header.key === 'Vary' && header.value) {
-          vary(res, header.value);
-        } else if (header.value) {
-          res.setHeader(header.key, header.value);
-        }
-      }
-    }
-  }
-
-  function cors(options, req, res, next) {
-    var headers = [],
-      method = req.method && req.method.toUpperCase && req.method.toUpperCase();
-
-    if (method === 'OPTIONS') {
-      // preflight
-      headers.push(configureOrigin(options, req));
-      headers.push(configureCredentials(options, req));
-      headers.push(configureMethods(options, req));
-      headers.push(configureAllowedHeaders(options, req));
-      headers.push(configureMaxAge(options, req));
-      headers.push(configureExposedHeaders(options, req));
-      applyHeaders(headers, res);
-
-      if (options.preflightContinue ) {
-        next();
-      } else {
-        res.statusCode = options.optionsSuccessStatus || defaults.optionsSuccessStatus;
-        res.end();
-      }
-    } else {
-      // actual response
-      headers.push(configureOrigin(options, req));
-      headers.push(configureCredentials(options, req));
-      headers.push(configureExposedHeaders(options, req));
-      applyHeaders(headers, res);
-      next();
-    }
-  }
-
-  function middlewareWrapper(o) {
-    // if no options were passed in, use the defaults
-    if (!o || o === true) {
-      o = {};
-    }
-    if (o.origin === undefined) {
-      o.origin = defaults.origin;
-    }
-    if (o.methods === undefined) {
-      o.methods = defaults.methods;
-    }
-    if (o.preflightContinue === undefined) {
-      o.preflightContinue = defaults.preflightContinue;
-    }
-
-    // if options are static (either via defaults or custom options passed in), wrap in a function
-    var optionsCallback = null;
-    if (typeof o === 'function') {
-      optionsCallback = o;
-    } else {
-      optionsCallback = function (req, cb) {
-        cb(null, o);
-      };
-    }
-
-    return function corsMiddleware(req, res, next) {
-      optionsCallback(req, function (err, options) {
-        if (err) {
-          next(err);
-        } else {
-          var originCallback = null;
-          if (options.origin && typeof options.origin === 'function') {
-            originCallback = options.origin;
-          } else if (options.origin) {
-            originCallback = function (origin, cb) {
-              cb(null, options.origin);
-            };
-          }
-
-          if (originCallback) {
-            originCallback(req.headers.origin, function (err2, origin) {
-              if (err2 || !origin) {
-                next(err2);
-              } else {
-                var corsOptions = Object.create(options);
-                corsOptions.origin = origin;
-                cors(corsOptions, req, res, next);
-              }
-            });
-          } else {
-            next();
-          }
-        }
-      });
-    };
-  }
-
-  // can pass either an options hash, an options delegate, or nothing
-  module.exports = middlewareWrapper;
-
-}());
-
-},{"vary":12}],6:[function(require,module,exports){
 var split = require('browser-split')
 var ClassList = require('class-list')
 
@@ -781,7 +536,7 @@ function isArray (arr) {
 
 
 
-},{"browser-split":2,"class-list":3,"html-element":1}],7:[function(require,module,exports){
+},{"browser-split":2,"class-list":3,"html-element":1}],6:[function(require,module,exports){
 
 var indexOf = [].indexOf;
 
@@ -792,7 +547,7 @@ module.exports = function(arr, obj){
   }
   return -1;
 };
-},{}],8:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * Root reference for iframes.
  */
@@ -1770,7 +1525,7 @@ request.put = function(url, data, fn){
   return req;
 };
 
-},{"./is-object":9,"./request":11,"./request-base":10,"emitter":4}],9:[function(require,module,exports){
+},{"./is-object":8,"./request":10,"./request-base":9,"emitter":4}],8:[function(require,module,exports){
 /**
  * Check if `obj` is an object.
  *
@@ -1785,7 +1540,7 @@ function isObject(obj) {
 
 module.exports = isObject;
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /**
  * Module of mixed-in functions shared between node and client code
  */
@@ -2159,7 +1914,7 @@ exports.send = function(data){
   return this;
 };
 
-},{"./is-object":9}],11:[function(require,module,exports){
+},{"./is-object":8}],10:[function(require,module,exports){
 // The node and browser modules expose versions of this with the
 // appropriate constructor function bound as first argument
 /**
@@ -2193,154 +1948,54 @@ function request(RequestConstructor, method, url) {
 
 module.exports = request;
 
-},{}],12:[function(require,module,exports){
-/*!
- * vary
- * Copyright(c) 2014-2015 Douglas Christopher Wilson
- * MIT Licensed
- */
-
-'use strict';
-
-/**
- * Module exports.
- */
-
-module.exports = vary;
-module.exports.append = append;
-
-/**
- * Variables.
- */
-
-var separators = /[\(\)<>@,;:\\"\/\[\]\?=\{\}\u0020\u0009]/;
-
-/**
- * Append a field to a vary header.
- *
- * @param {String} header
- * @param {String|Array} field
- * @return {String}
- * @api public
- */
-
-function append(header, field) {
-  if (typeof header !== 'string') {
-    throw new TypeError('header argument is required');
-  }
-
-  if (!field) {
-    throw new TypeError('field argument is required');
-  }
-
-  // get fields array
-  var fields = !Array.isArray(field)
-    ? parse(String(field))
-    : field;
-
-  // assert on invalid fields
-  for (var i = 0; i < fields.length; i++) {
-    if (separators.test(fields[i])) {
-      throw new TypeError('field argument contains an invalid header');
-    }
-  }
-
-  // existing, unspecified vary
-  if (header === '*') {
-    return header;
-  }
-
-  // enumerate current values
-  var val = header;
-  var vals = parse(header.toLowerCase());
-
-  // unspecified vary
-  if (fields.indexOf('*') !== -1 || vals.indexOf('*') !== -1) {
-    return '*';
-  }
-
-  for (var i = 0; i < fields.length; i++) {
-    var fld = fields[i].toLowerCase();
-
-    // append value (case-preserving)
-    if (vals.indexOf(fld) === -1) {
-      vals.push(fld);
-      val = val
-        ? val + ', ' + fields[i]
-        : fields[i];
-    }
-  }
-
-  return val;
-}
-
-/**
- * Parse a vary header into an array.
- *
- * @param {String} header
- * @return {Array}
- * @api private
- */
-
-function parse(header) {
-  return header.trim().split(/ *, */);
-}
-
-/**
- * Mark that a request is varied on a header field.
- *
- * @param {Object} res
- * @param {String|Array} field
- * @api public
- */
-
-function vary(res, field) {
-  if (!res || !res.getHeader || !res.setHeader) {
-    // quack quack
-    throw new TypeError('res argument is required');
-  }
-
-  // get existing header
-  var val = res.getHeader('Vary') || ''
-  var header = Array.isArray(val)
-    ? val.join(', ')
-    : String(val);
-
-  // set new header
-  if ((val = append(header, field))) {
-    res.setHeader('Vary', val);
-  }
-}
-
-},{}],13:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var request = require('superagent')
 var showPost = require('../views/showPost.js')
-var cors = require('cors');
-app.use(cors()) // CORS!!!!!!
 
-
-var main = document.querySelector('main')
+var clinton = document.getElementById('clinton-posts')
+var trump = document.getElementById('trump-posts')
 
 request
-  .get('https://api/v1/posts/clinton')
-  .end (function(error, reponse){
+  .get('api/v1/posts/clinton')
+  .end (function(error, response){
     if (error) {
       console.log(error)
     }
     else {
-      console.log("Resolved")
-      post = showPost(response.name, response.message)
-      main.appendChild(post)
+      for (var i = 0; i < response.body.posts.length; i++){
+        post = showPost(response.body.posts[i].name, response.body.posts[i].message)
+        clinton.appendChild(post)
+      }
     }
   })
 
-},{"../views/showPost.js":14,"cors":5,"superagent":8}],14:[function(require,module,exports){
+request
+  .get('api/v1/posts/trump')
+  .end (function(error, response){
+    if (error) {
+      console.log(error)
+    }
+    else {
+      for (var i = 0; i < response.body.posts.length; i++){
+        post = showPost(response.body.posts[i].name, response.body.posts[i].message)
+        trump.appendChild(post)
+      }
+    }
+  })
+
+request
+  .get('api/v1/posts/trump/sentiment')
+  .end (function(error, response){
+  })
+
+},{"../views/showPost.js":12,"superagent":7}],12:[function(require,module,exports){
 var h = require('hyperscript');
 
 module.exports = function(name, message) {
-  return h('h3', {}, `${name} writes...`,
-   ('p', {}, `${message}`)
+  return h('div', {class: "post"},
+    h('h2', {class: "name"}, `${name}`),
+    h('p', {class: "message"}, `${message}`)
   )
 }
 
-},{"hyperscript":6}]},{},[13]);
+},{"hyperscript":5}]},{},[11]);

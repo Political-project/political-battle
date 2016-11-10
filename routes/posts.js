@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var data = require('./db/db')
 
 /* GET all the posts from the Clint Posts table. */
 router.get('/clinton', function(req, res, next) {

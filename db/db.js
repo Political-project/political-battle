@@ -5,8 +5,7 @@ var knex = Knex(knexConfig)
 module.exports = {
     getAllComments,
     getCommentById,
-    getPositive,
-    getNegatives,
+    getSentimentTotals,
     postComment
 }
 
@@ -18,12 +17,8 @@ function getCommentById(table, id) {
   return knex(table).where('id', id)
 }
 
-function getPositive(table) {
-  return knex(table).sum('positive')
-}
-
-function getNegatives(table) {
-  return knex(table).sum('negative')
+function getSentimentTotals(table) {
+  return knex(table).sum('negative AS negative').sum('positive AS positive')
 }
 
 function postComment(table, name, message, sentiment) {
@@ -33,8 +28,3 @@ function postComment(table, name, message, sentiment) {
       return knex(table).insert({nickname: name, message: message, negative: 1})
     }
 }
-
-// getAllComments('clinton')
-//   .then(function(clintontable){
-//     console.log(clintontable)
-//   })

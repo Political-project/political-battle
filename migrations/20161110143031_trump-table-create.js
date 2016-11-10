@@ -4,6 +4,7 @@ exports.up = function(knex, Promise) {
   return knex.schema.createTableIfNotExists('trump', function(table){
     table.increments('id')
     table.string('nickname')
+    table.text('message')
     table.integer('votecount')
     table.string('sentiment')
   })

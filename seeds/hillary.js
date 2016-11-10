@@ -10,21 +10,21 @@ exports.seed = function(knex, Promise) {
           nickname: 'gabita',
           message: 'Everything suckssssss',
           votecount: 5,
-          sentiment: 'negative'
+          negative: '1'
         }),
         knex('hillary').insert({
           id: 2,
           nickname: 'gabita',
           message: 'She was the best candidate',
           votecount: 34,
-          sentiment: 'positive'
+          positive: '1'
         }),
         knex('hillary').insert({
           id: 3,
           nickname: 'james',
-          message: 'The world does not need more lying politicians'
-          votecount: 100,
-          sentiment: 'negative'
+          message: 'The world does not need more lying politicians',
+          votecount: 10,
+          negative: '1'
         })
       ]);
     });

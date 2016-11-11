@@ -2643,7 +2643,7 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "clinton")
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "clinton", response.body.posts[i].votecount)
         clinton.appendChild(post)
       }
     }
@@ -2664,7 +2664,7 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "trump")
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "trump", response.body.posts[i].votecount)
         trump.appendChild(post)
       }
       // trump.appendChild(respondButton('trump'))
@@ -2701,14 +2701,15 @@ module.exports = function(table) {
 },{"hyperscript":5}],15:[function(require,module,exports){
 var h = require('hyperscript');
 
-module.exports = function(name, message, id, table) {
+module.exports = function(name, message, id, table, voteCount) {
   return h('div.post', {},
     h('a', {href:`api/v1/posts/${table}/${id}`},
-    h('h2', {class: "name"}, `${name}`),
-    h('p', {class: "message"}, `${message}`),
+      h('h2', {class: "name"}, `${name}`),
+      h('p', {class: "message"}, `${message}`),
+      h('h3', {class: "votes"}, `net vote:${voteCount}`)
+    ),
     h('button', {class: "upVote"}, "upVote"),
     h('button', {class: "downVote"}, "downVote")
-    )
   )
 }
 

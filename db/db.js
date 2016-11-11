@@ -28,12 +28,12 @@ function getSentimentTotals(table) {
 }
 
 function postComment(newComment) {
-    if (newComment.sentiment === 'positive') {
+    if (newComment.sentiment == 'positive') {
       return knex(newComment.table).insert({
         nickname: newComment.name,
         message: newComment.message,
         positive: 1})
-    } else if (sentiment === 'negative' ) {
+    } else if (sentiment == 'negative' ) {
       return knex(newComment.table).insert({
         nickname: newComment.name,
         message: newComment.message,

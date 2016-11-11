@@ -58,6 +58,7 @@ router.post('/:candidate', function(req, res, next){
     message: req.body.message,
     sentiment: req.body.sentiment
   }
+  console.log(newComment)
   database.postComment(newComment)
     .then(function(){
       console.log('Comment posted successfully')

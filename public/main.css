@@ -1,6 +1,17 @@
 body {
   font-family: 'Roboto', sans-serif;
   text-align: center;
+  background-color: #F5F5F5;
+}
+
+a {
+  text-decoration: inherit;
+  color: inherit;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 960px;
 }
 
 .main-area {
@@ -24,4 +35,19 @@ form {
   margin: 20px 15px;
   box-sizing: border-box;
   min-height: 160px;
+  background-color: white;
+}
+
+.sentimentBox {
+  border-radius: 10px;
+}
+
+#clintonSentiment {
+  border-color: #3498db;
+  color: #3498db;
+
+}
+#trumpSentiment {
+  border-color: #e74c3c;
+  color: #e74c3c;
 }

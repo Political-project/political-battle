@@ -2608,11 +2608,31 @@ var morphdom = require('morphdom')
 
 var formContent = require('../views/formContent.js')
 var respondButton = require('../views/respondButton.js')
+var showSentiment = require('../views/showSentiment.js')
 
 var clinton = document.getElementById('clinton-posts')
 var trump = document.getElementById('trump-posts')
 var form = document.getElementById('formArea')
 
+request
+  .get('api/v1/posts/clinton/sentiment')
+  .end(function(error, response){
+    if (error) {
+      console.log(error)
+    } else {
+      clinton.appendChild(showSentiment("clinton", "Hillary Clinton", response.body.totals[0].positive, response.body.totals[0].negative))
+    }
+  })
+
+request
+  .get('api/v1/posts/trump/sentiment')
+  .end(function(error, response){
+    if (error) {
+      console.log(error)
+    } else {
+      trump.appendChild(showSentiment("trump", "Mr. Trump", response.body.totals[0].positive, response.body.totals[0].negative))
+    }
+  })
 
 
 request
@@ -2623,18 +2643,17 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message)
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "clinton")
         clinton.appendChild(post)
       }
     }
-    clinton.appendChild(respondButton("clinton"))
+    // clinton.appendChild(respondButton("clinton"))
     clinton.appendChild(formContent('clinton'))
   })
 
   request
     .get('api/v1/posts/trump/sentiment')
     .end (function(error, response){
-      
     })
 
 request
@@ -2645,15 +2664,15 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message)
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "trump")
         trump.appendChild(post)
       }
-      trump.appendChild(respondButton('trump'))
+      // trump.appendChild(respondButton('trump'))
       trump.appendChild(formContent('trump'))
     }
   })
 
-},{"../views/formContent.js":13,"../views/respondButton.js":14,"../views/showPost.js":15,"morphdom":7,"superagent":8}],13:[function(require,module,exports){
+},{"../views/formContent.js":13,"../views/respondButton.js":14,"../views/showPost.js":15,"../views/showSentiment.js":16,"morphdom":7,"superagent":8}],13:[function(require,module,exports){
 var h = require('hyperscript')
 
 // module.exports = function() {
@@ -2682,12 +2701,24 @@ module.exports = function(table) {
 },{"hyperscript":5}],15:[function(require,module,exports){
 var h = require('hyperscript');
 
-module.exports = function(name, message) {
+module.exports = function(name, message, id, table) {
   return h('div.post', {},
+    h('a', {href:`api/v1/posts/${table}/${id}`},
     h('h2', {class: "name"}, `${name}`),
     h('p', {class: "message"}, `${message}`),
     h('button', {class: "upVote"}, "upVote"),
     h('button', {class: "downVote"}, "downVote")
+    )
+  )
+}
+
+},{"hyperscript":5}],16:[function(require,module,exports){
+var h = require('hyperscript');
+
+module.exports = function(table, person, positive, negative) {
+  return h('div.sentimentBox.post', {id: `${table}Sentiment`},
+    h('h3', {}, `Positivity directed at ${person}: ${positive}`),
+    h('h3', {}, `Negativity directed at ${person}: ${negative}`)
   )
 }
 

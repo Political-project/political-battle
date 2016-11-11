@@ -41,10 +41,10 @@ function postComment(newComment) {
     }
 }
 
-function postVote(vote){
-  if (vote.sentiment === 'positive'){
-    return knex(vote.table).where('id', vote.id).increment('votecount', 1)
-  } else if (vote.sentiment === 'negative'){
-    return knex(vote.table).where('id', vote.id).decrement('votecount', 1)
+function postVote(voteObj){
+  if (voteObj.vote == 'upvote'){
+    return knex(voteObj.table).where('id', voteObj.id).increment('votecount', 1)
+  } else if (voteObj.vote == 'downvote'){
+    return knex(voteObj.table).where('id', voteObj.id).decrement('votecount', 1)
   }
 }

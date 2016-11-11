@@ -70,12 +70,13 @@ router.post('/:candidate', function(req, res, next){
 
 //POST an upvote or downvote to a comment
 router.post('/:candidate/:id/:vote', function(req, res, next){
-  var vote = {
+  var voteObj = {
     table: req.params.candidate,
     id: req.params.id,
     vote: req.params.vote
   }
-  database.postVote(vote)
+  console.log(voteObj)
+  database.postVote(voteObj)
     .then(function(){
       console.log('success')
       res.json({success: 'Vote casted successfully'})

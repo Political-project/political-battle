@@ -6,10 +6,10 @@ var database = require('../db/db')
 router.get('/:candidate', function(req, res, next) {
   database.getAllComments(req.params.candidate)
     .then(function(clintonTable){
-      res.json({posts: clintonTable})
+      res.json({ posts: clintonTable })
     })
     .catch(function(error){
-      res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
+      res.json({ error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
     })
 })
 
@@ -25,7 +25,7 @@ router.get('/:candidate/popular', function(req, res, next){
 router.get('/:candidate/sentiment', function(req, res, next){
   database.getSentimentTotals(req.params.candidate)
     .then(function(sentimentTotals){
-      res.json({totals: sentimentTotals})
+      res.json({ totals: sentimentTotals })
     })
     .catch(function(error){
       res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
@@ -34,7 +34,13 @@ router.get('/:candidate/sentiment', function(req, res, next){
 
 /* GET a specific post from a table by ID */
 router.get('/:candidate/:id', function(req, res, next) {
-  res.json({message: "Hillary does not float my boat"})
+  database.getCommentById(req.params.candidate, req.params.id)
+    .then(function(comment){
+      res.json({ message: comment })
+    })
+    .catch(function(error){
+      res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
+    })
 })
 
 /* POST to the a table */

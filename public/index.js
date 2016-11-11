@@ -39,7 +39,7 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "clinton")
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "clinton", response.body.posts[i].votecount)
         clinton.appendChild(post)
       }
     }
@@ -60,7 +60,7 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "trump")
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "trump", response.body.posts[i].votecount)
         trump.appendChild(post)
       }
       // trump.appendChild(respondButton('trump'))

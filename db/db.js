@@ -43,14 +43,8 @@ function postComment(newComment) {
 
 function postVote(vote){
   if (vote.sentiment === 'positive'){
-    knex(vote.table).where('id', vote.id).increment('votecount', 1)
-      .then(function(){
-        return knex.select('votecount').from(vote.table).where('id', vote.id)
-      })
+    return knex(vote.table).where('id', vote.id).increment('votecount', 1)
   } else if (vote.sentiment === 'negative'){
-    knex(vote.table).where('id', vote.id).decrement('votecount', 1)
-      .then(function(){
-        return knex.select('votecount').from(vote.table).where('id', vote.id)
-      })
+    return knex(vote.table).where('id', vote.id).decrement('votecount', 1)
   }
 }

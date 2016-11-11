@@ -76,9 +76,9 @@ router.post('/:candidate/:id/:vote', function(req, res, next){
     vote: req.params.vote
   }
   database.postVote(vote)
-    .then(function(totalVoteCount){
+    .then(function(){
       console.log('success')
-      res.json({voteCount: totalVoteCount})
+      res.json({success: 'Vote casted successfully'})
     })
     .catch(function(error){
       console.log(error)

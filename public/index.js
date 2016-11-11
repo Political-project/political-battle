@@ -1,8 +1,12 @@
 var request = require('superagent')
 var showPost = require('../views/showPost.js')
+var morphdom = require('morphdom')
+var formContent = require('../views/formContent.js')
 
 var clinton = document.getElementById('clinton-posts')
 var trump = document.getElementById('trump-posts')
+var form = document.getElementById('formArea')
+form.appendChild(formContent())
 
 request
   .get('api/v1/posts/clinton')
@@ -29,6 +33,7 @@ request
         post = showPost(response.body.posts[i].name, response.body.posts[i].message)
         trump.appendChild(post)
       }
+
     }
   })
 

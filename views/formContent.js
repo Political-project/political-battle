@@ -8,7 +8,7 @@ module.exports = function(table) {
  return h('form', {action:`api/v1/${table}`, method:"post", id:table},
    h('input', {placeholder:"name", type:"text"}, "Name"),
    h('input', {placeholder:"message", type:"text"}, "Message"),
-   h('select', {placeholder:"Sentiment", type:"submit"},
+   h('select', {name:"sentiment", label:"sentiment"},
      h('option', {value: "positive"}, "Positive"),
      h('option', {value: "negative"}, "Negative")
    ),

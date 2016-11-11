@@ -4,13 +4,19 @@ var knex = Knex(knexConfig)
 
 module.exports = {
     getAllComments,
+    getTopTenComments,
     getCommentById,
     getSentimentTotals,
-    postComment
+    postComment,
+    postVote
 }
 
 function getAllComments(table) {
   return knex(table)
+}
+
+function getTopTenComments(table){
+  return knex(table).orderBy('votecount', 'desc').limit(10)
 }
 
 function getCommentById(table, id) {
@@ -21,10 +27,24 @@ function getSentimentTotals(table) {
   return knex(table).sum('negative AS negative').sum('positive AS positive')
 }
 
-function postComment(table, name, message, sentiment) {
-    if (sentiment === 'positive') {
-      return knex(table).insert({nickname: name, message: message, positive: 1})
-    } else if (sentiment == 'negative' ) {
-      return knex(table).insert({nickname: name, message: message, negative: 1})
+function postComment(newComment) {
+    if (newComment.sentiment === 'positive') {
+      return knex(newComment.table).insert({
+        nickname: newComment.name,
+        message: newComment.message,
+        positive: 1})
+    } else if (sentiment === 'negative' ) {
+      return knex(newComment.table).insert({
+        nickname: newComment.name,
+        message: newComment.message,
+        negative: 1})
     }
+}
+
+function postVote(vote){
+  if (vote.sentiment === 'positive'){
+    return knex(vote.table).where('id', vote.id).increment('votecount', 1)
+  } else if (vote.sentiment === 'negative'){
+    return knex(vote.table).where('id', vote.id).decrement('votecount', 1)
+  }
 }

@@ -2605,12 +2605,15 @@ module.exports = request;
 var request = require('superagent')
 var showPost = require('../views/showPost.js')
 var morphdom = require('morphdom')
+
 var formContent = require('../views/formContent.js')
+var respondButton = require('../views/respondButton.js')
 
 var clinton = document.getElementById('clinton-posts')
 var trump = document.getElementById('trump-posts')
 var form = document.getElementById('formArea')
-form.appendChild(formContent())
+
+form.appendChild(formContent('trump'))
 
 request
   .get('api/v1/posts/clinton')
@@ -2624,6 +2627,7 @@ request
         clinton.appendChild(post)
       }
     }
+    clinton.appendChild(respondButton("clinton"))
   })
 
 request
@@ -2637,7 +2641,7 @@ request
         post = showPost(response.body.posts[i].name, response.body.posts[i].message)
         trump.appendChild(post)
       }
-
+      trump.appendChild(respondButton("trump"))
     }
   })
 
@@ -2646,17 +2650,21 @@ request
   .end (function(error, response){
   })
 
-},{"../views/formContent.js":13,"../views/showPost.js":14,"morphdom":7,"superagent":8}],13:[function(require,module,exports){
+},{"../views/formContent.js":13,"../views/respondButton.js":14,"../views/showPost.js":15,"morphdom":7,"superagent":8}],13:[function(require,module,exports){
 var h = require('hyperscript')
 
 // module.exports = function() {
 //   return h('form', {action:"api/v1/trump", accepted-charset:"UTF-8", method:"post"})
 // }
 
-module.exports = function() {
- return h('form', {action:"api/v1/trump", method:"post"}, "hello",
+module.exports = function(table) {
+ return h('form', {action:`api/v1/${table}`, method:"post"},
    h('input', {placeholder:"name", type:"text"}, "Name"),
-   h('input', {placeholder:"name", type:"text"}, "Message"),
+   h('input', {placeholder:"message", type:"text"}, "Message"),
+   h('select', {placeholder:"Sentiment", type:"submit"},
+     h('option', {value: "positive"}, "Positive"),
+     h('option', {value: "negative"}, "Negative")
+   ),
    h('input', {placeholder:"name", type:"submit"}, "Submit")
 )
 }
@@ -2664,10 +2672,19 @@ module.exports = function() {
 },{"hyperscript":5}],14:[function(require,module,exports){
 var h = require('hyperscript');
 
+module.exports = function(table) {
+  return h('a', {href:`#`, id:table}, `say something about ${table}`)
+}
+
+},{"hyperscript":5}],15:[function(require,module,exports){
+var h = require('hyperscript');
+
 module.exports = function(name, message) {
   return h('div', {class: "post"},
     h('h2', {class: "name"}, `${name}`),
-    h('p', {class: "message"}, `${message}`)
+    h('p', {class: "message"}, `${message}`),
+    h('button', {class: "upVote"}, "upVote"),
+    h('button', {class: "upVote"}, "upVote")
   )
 }
 

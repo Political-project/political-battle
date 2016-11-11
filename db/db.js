@@ -4,6 +4,7 @@ var knex = Knex(knexConfig)
 
 module.exports = {
     getAllComments,
+    getTopTenComments,
     getCommentById,
     getSentimentTotals,
     postComment
@@ -11,6 +12,10 @@ module.exports = {
 
 function getAllComments(table) {
   return knex(table)
+}
+
+function getTopTenComments(table){
+  return knex(table).orderBy('votecount', 'desc').limit(10)
 }
 
 function getCommentById(table, id) {
@@ -24,7 +29,7 @@ function getSentimentTotals(table) {
 function postComment(table, name, message, sentiment) {
     if (sentiment === 'positive') {
       return knex(table).insert({nickname: name, message: message, positive: 1})
-    } else if (sentiment == 'negative' ) {
+    } else if (sentiment === 'negative' ) {
       return knex(table).insert({nickname: name, message: message, negative: 1})
     }
 }

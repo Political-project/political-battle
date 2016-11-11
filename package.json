@@ -13,6 +13,7 @@
     "express": "~4.13.1",
     "hyperscript": "^2.0.2",
     "knex": "^0.12.6",
+    "morphdom": "^2.2.0",
     "nodemon": "^1.11.0",
     "pg": "^6.1.0",
     "superagent": "^2.3.0",

@@ -13,3 +13,15 @@ body {
   flex: 1;
   text-align: center;
 }
+
+form {
+  display: block;
+  width: 100%;
+}
+
+.post {
+  border: solid 2px black;
+  margin: 7px;
+  box-sizing: border-box;
+  min-height: 200px;
+}

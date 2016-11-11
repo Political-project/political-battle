@@ -36,10 +36,12 @@ form {
   box-sizing: border-box;
   min-height: 160px;
   background-color: white;
+  padding-bottom: 10px;
 }
 
 .sentimentBox {
   border-radius: 10px;
+  min-height: inherit;
 }
 
 #clintonSentiment {

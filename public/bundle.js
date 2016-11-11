@@ -2643,7 +2643,8 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message, response.body.posts[i].id, "clinton", response.body.posts[i].votecount)
+        var thisPost = response.body.posts[i]
+        post = showPost(thisPost.nickname, thisPost.message, thisPost.id, "clinton", thisPost.votecount)
         clinton.appendChild(post)
       }
     }

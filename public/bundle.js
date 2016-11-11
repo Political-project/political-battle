@@ -2631,6 +2631,12 @@ request
     clinton.appendChild(formContent('clinton'))
   })
 
+  request
+    .get('api/v1/posts/trump/sentiment')
+    .end (function(error, response){
+      
+    })
+
 request
   .get('api/v1/posts/trump')
   .end (function(error, response){
@@ -2647,11 +2653,6 @@ request
     }
   })
 
-request
-  .get('api/v1/posts/trump/sentiment')
-  .end (function(error, response){
-  })
-
 },{"../views/formContent.js":13,"../views/respondButton.js":14,"../views/showPost.js":15,"morphdom":7,"superagent":8}],13:[function(require,module,exports){
 var h = require('hyperscript')
 
@@ -2663,7 +2664,7 @@ module.exports = function(table) {
  return h('form', {action:`api/v1/${table}`, method:"post", id:table},
    h('input', {placeholder:"name", type:"text"}, "Name"),
    h('input', {placeholder:"message", type:"text"}, "Message"),
-   h('select', {placeholder:"Sentiment", type:"submit"},
+   h('select', {name:"sentiment", label:"sentiment"},
      h('option', {value: "positive"}, "Positive"),
      h('option', {value: "negative"}, "Negative")
    ),

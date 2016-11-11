@@ -27,6 +27,12 @@ request
     clinton.appendChild(formContent('clinton'))
   })
 
+  request
+    .get('api/v1/posts/trump/sentiment')
+    .end (function(error, response){
+      
+    })
+
 request
   .get('api/v1/posts/trump')
   .end (function(error, response){
@@ -41,9 +47,4 @@ request
       trump.appendChild(respondButton('trump'))
       trump.appendChild(formContent('trump'))
     }
-  })
-
-request
-  .get('api/v1/posts/trump/sentiment')
-  .end (function(error, response){
   })

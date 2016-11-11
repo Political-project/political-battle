@@ -2613,7 +2613,7 @@ var clinton = document.getElementById('clinton-posts')
 var trump = document.getElementById('trump-posts')
 var form = document.getElementById('formArea')
 
-form.appendChild(formContent('trump'))
+
 
 request
   .get('api/v1/posts/clinton')
@@ -2623,11 +2623,12 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].name, response.body.posts[i].message)
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message)
         clinton.appendChild(post)
       }
     }
     clinton.appendChild(respondButton("clinton"))
+    clinton.appendChild(formContent('clinton'))
   })
 
 request
@@ -2638,10 +2639,11 @@ request
     }
     else {
       for (var i = 0; i < response.body.posts.length; i++){
-        post = showPost(response.body.posts[i].name, response.body.posts[i].message)
+        post = showPost(response.body.posts[i].nickname, response.body.posts[i].message)
         trump.appendChild(post)
       }
-      trump.appendChild(respondButton("trump"))
+      trump.appendChild(respondButton('trump'))
+      trump.appendChild(formContent('trump'))
     }
   })
 
@@ -2658,7 +2660,7 @@ var h = require('hyperscript')
 // }
 
 module.exports = function(table) {
- return h('form', {action:`api/v1/${table}`, method:"post"},
+ return h('form', {action:`api/v1/${table}`, method:"post", id:table},
    h('input', {placeholder:"name", type:"text"}, "Name"),
    h('input', {placeholder:"message", type:"text"}, "Message"),
    h('select', {placeholder:"Sentiment", type:"submit"},
@@ -2680,11 +2682,11 @@ module.exports = function(table) {
 var h = require('hyperscript');
 
 module.exports = function(name, message) {
-  return h('div', {class: "post"},
+  return h('div.post', {},
     h('h2', {class: "name"}, `${name}`),
     h('p', {class: "message"}, `${message}`),
     h('button', {class: "upVote"}, "upVote"),
-    h('button', {class: "upVote"}, "upVote")
+    h('button', {class: "downVote"}, "downVote")
   )
 }
 

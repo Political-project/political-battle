@@ -5,7 +5,7 @@ var h = require('hyperscript')
 // }
 
 module.exports = function(table) {
- return h('form', {action:`api/v1/${table}`, method:"post"},
+ return h('form', {action:`api/v1/${table}`, method:"post", id:table},
    h('input', {placeholder:"name", type:"text"}, "Name"),
    h('input', {placeholder:"message", type:"text"}, "Message"),
    h('select', {placeholder:"Sentiment", type:"submit"},

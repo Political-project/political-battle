@@ -12,6 +12,6 @@ module.exports = function(table) {
      h('option', {value: "positive"}, "Positive"),
      h('option', {value: "negative"}, "Negative")
    ),
-   h('input', {placeholder:"name", type:"submit"}, "Submit")
+   h('input', {type:"submit", value:"submit"}, "Submit")
 )
 }

@@ -7,7 +7,8 @@ module.exports = {
     getTopTenComments,
     getCommentById,
     getSentimentTotals,
-    postComment
+    postComment,
+    postVote
 }
 
 function getAllComments(table) {
@@ -26,10 +27,30 @@ function getSentimentTotals(table) {
   return knex(table).sum('negative AS negative').sum('positive AS positive')
 }
 
-function postComment(table, name, message, sentiment) {
-    if (sentiment === 'positive') {
-      return knex(table).insert({nickname: name, message: message, positive: 1})
+function postComment(newComment) {
+    if (newComment.sentiment === 'positive') {
+      return knex(newComment.table).insert({
+        nickname: newComment.name,
+        message: newComment.message,
+        positive: 1})
     } else if (sentiment === 'negative' ) {
-      return knex(table).insert({nickname: name, message: message, negative: 1})
+      return knex(newComment.table).insert({
+        nickname: newComment.name,
+        message: newComment.message,
+        negative: 1})
     }
+}
+
+function postVote(vote){
+  if (vote.sentiment === 'positive'){
+    knex(vote.table).where('id', vote.id).increment('votecount', 1)
+      .then(function(){
+        return knex.select('votecount').from(vote.table).where('id', vote.id)
+      })
+  } else if (vote.sentiment === 'negative'){
+    knex(vote.table).where('id', vote.id).decrement('votecount', 1)
+      .then(function(){
+        return knex.select('votecount').from(vote.table).where('id', vote.id)
+      })
+  }
 }

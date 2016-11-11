@@ -52,10 +52,38 @@ router.get('/:candidate/:id', function(req, res, next) {
 
 /* POST to the a table */
 router.post('/:candidate', function(req, res, next){
+  var newComment = {
+    table: req.params.candidate,
+    name: req.body.name,
+    message: req.body.message,
+    sentiment: req.body.sentiment
+  }
+  database.postComment(newComment)
+    .then(function(){
+      console.log('Comment posted successfully')
+    })
+    .catch(function(error){
+      console.log(error)
+      res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
+    })
 })
 
+//POST an upvote or downvote to a comment
+router.post('/:candidate/:id/:vote', function(req, res, next){
+  var vote = {
+    table: req.params.candidate,
+    id: req.params.id,
+    vote: req.params.vote
+  }
+  database.postVote(vote)
+    .then(function(totalVoteCount){
+      console.log('success')
+      res.json({voteCount: totalVoteCount})
+    })
+    .catch(function(error){
+      console.log(error)
+      res.json({error: [{message: 'There was a problem connecting to the database'}, {code: 500}]})
+    })
+})
 
-
-
-
-module.exports = router;
+module.exports = router
